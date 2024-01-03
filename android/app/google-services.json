@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1015412238693",
+    "firebase_url": "https://auth-project-c55c0-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "auth-project-c55c0",
+    "storage_bucket": "auth-project-c55c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015412238693:android:34e81f51b2d74e2da7998c",
+        "android_client_info": {
+          "package_name": "com.auron.transyol"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015412238693-vadn8uv3e6vidkpi3q67hpocvn4ndlnf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.auron.transyol",
+            "certificate_hash": "ee1408bc08f231483617a9f8a8adecd901d67550"
+          }
+        },
+        {
+          "client_id": "1015412238693-7equ9v06equmc0mg5ilsr4er1k92klfv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUhhYKMWQhGhs66YOWWtgz0-Mb2ynZfp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015412238693-7equ9v06equmc0mg5ilsr4er1k92klfv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
