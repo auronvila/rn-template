@@ -8,12 +8,17 @@ export function AuthContextProvider({ children }: { children: ReactNode }) {
   const [authToken, setAuthToken] = useState<string>('')
 
   async function updateAuth(token: string) {
-    await AsyncStorage.setItem('token', token)
+    await AsyncStorage.setItem('authToken', token)
     setAuthToken(token)
   }
 
+  async function logOut() {
+    setAuthToken(null)
+    await AsyncStorage.removeItem('authToken')
+  }
+
   return (
-    <AuthContext.Provider value={{ updateAuth, authToken, isAuthenticated: !!authToken, }}>
+    <AuthContext.Provider value={{ updateAuth, logOut,authToken, isAuthenticated: !!authToken }}>
       {children}
     </AuthContext.Provider>
   );

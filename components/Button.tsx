@@ -18,11 +18,11 @@ export default function CustomButton(props: ButtonProps) {
 const styles = StyleSheet.create({
   button: {
     paddingVertical: 7,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10,
     borderStyle: 'solid',
     borderWidth: 2,
     borderColor: 'black',
-    width: 100,
+    minWidth: 110,
     textAlign: 'center',
     alignItems: 'center',
     justifyContent: 'center'
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   pressed: {
-    opacity: .7
+    opacity: .4
   }
 })

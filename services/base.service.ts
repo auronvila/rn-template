@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const BaseService = axios.create({
   timeout: 1000 * 60,
-  baseURL: ''
+  baseURL: 'http://transyol.caykara.dev/api'
 });
 
 BaseService.interceptors.request.use(

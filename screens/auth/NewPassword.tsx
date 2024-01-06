@@ -4,16 +4,26 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import CustomButton from '../../components/Button';
-import { useLayoutEffect, useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { ScreenProp } from '../publicScreens/WelcomeScreen';
 import { ROUTES } from '../../constants';
 import AlertDialog from '../../components/AlertDialog';
+import { RootStackParamList } from './AccountType';
+import axios from 'axios';
 
 const validationSchema = yup.object().shape({
   password: yup.string().required('Lütfen parola giriniz').min(6, 'Parola en az 6 karakterden oluşmalıdır')
 
 });
+
+type SignUpFormValues = {
+  code: string,
+}
+
+type NewPasswordParams = {
+  AccountType: SignUpFormValues
+}
 
 
 export default function NewPassword() {
@@ -22,6 +32,7 @@ export default function NewPassword() {
     resolver: yupResolver(validationSchema)
   });
   const navigation = useNavigation<ScreenProp>();
+  const verificationCode = useRoute<RouteProp<NewPasswordParams, 'AccountType'>>();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -32,7 +43,26 @@ export default function NewPassword() {
   }, [])
 
   const onSubmit = async (data: { password: string }) => {
-    console.log(data)
+    const dto = {
+      password: data.password,
+      code: verificationCode.params.code
+    }
+    console.log(dto)
+    try {
+      const response = await axios('https://transyol.caykara.dev/api/auth/reset-password', {
+        method: 'POST',
+        data: dto,
+        headers: {
+          'Content-type': 'application/json'
+        }
+      });
+      setAlertMessage('Parolanız başarılı bir şekilde güncellenmiştir lütfen güncel bilgiler ile giriş yapınız.')
+      navigation.navigate(ROUTES.SIGN_IN)
+
+    } catch (e) {
+      console.log('error---->', e.response);
+      alert(e.response.data.message)
+    }
     navigation.navigate(ROUTES.SIGN_IN)
   };
 
@@ -64,7 +94,6 @@ export default function NewPassword() {
       </View>
       <AlertDialog message={alertMessage} onClose={() => {
         setAlertMessage('')
-        navigation.navigate(ROUTES.CODE_VERIFICATION)
       }}/>
     </>
   )

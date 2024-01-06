@@ -9,16 +9,20 @@ import { ROUTES } from '../../constants';
 import * as Google from 'expo-auth-session/providers/google'
 import * as WebBrowser from 'expo-web-browser'
 import { getAuth, signInWithCredential } from 'firebase/auth'
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import firebase from 'firebase/compat';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { initializeApp } from 'firebase/app';
 import CustomButton from '../../components/Button';
+import axios from 'axios';
+import { SignUpReqDto } from '../../services/dto/Auth';
+import { AuthContext } from '../../store/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const validationSchema = yup.object().shape({
   emailOrPhone: yup.string()
-    .required('Lütfen mail yada telefon numarası giriniz')
+    .required('Lütfen mail veya telefon numarası giriniz')
     .test('email-or-phone', 'Lütfen geçerli bir telefon numarası giriniz', (value) => {
       const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
       const phoneRegex = /^\d{10}$/;
@@ -32,6 +36,7 @@ WebBrowser.maybeCompleteAuthSession()
 
 export default function SignInScreen() {
   const [userInfo, setUserInfo] = useState()
+  const { updateAuth } = useContext(AuthContext)
   const navigation = useNavigation<ScreenProp>();
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: '100702233245-dr5h3cbfl406dp9ob0mq96ad8tkd3jpi.apps.googleusercontent.com',
@@ -63,12 +68,10 @@ export default function SignInScreen() {
       signInWithCredential(auth, credential).then(i => console.log('IIIIIIII', i))
 
       firebase.auth().signInWithCredential(credential).then((result) => {
-        console.log('RESULT', result)
       }).catch((error) => {
         console.log(error)
         return
       });
-      console.log(credential)
     }
   }, [response]);
 
@@ -90,9 +93,43 @@ export default function SignInScreen() {
     const isPhoneNumber = /^\d{10}$/.test(input);
 
     if (isEmail) {
-      console.log('EMAIL', data)
+      const dto = {
+        email_address: data.emailOrPhone,
+        password: data.password
+      }
+
+      try {
+        const response = await axios('https://transyol.caykara.dev/api/auth/sign-in/email-address', {
+          method: 'POST',
+          data: dto,
+          headers: {
+            'Content-type': 'application/json'
+          }
+        });
+        updateAuth(response.data.access_token)
+      } catch (e) {
+        console.log('error---->', e.response);
+        alert(e.response.data.message)
+      }
     } else if (isPhoneNumber) {
-      console.log('PHONE NUMBER', data)
+      const dto = {
+        phone_number: data.emailOrPhone,
+        password: data.password
+      }
+
+      try {
+        const response = await axios('https://transyol.caykara.dev/api/auth/sign-in/phone-number', {
+          method: 'POST',
+          data: dto,
+          headers: {
+            'Content-type': 'application/json'
+          }
+        });
+        updateAuth(response.data.access_token)
+      } catch (e) {
+        console.log('error---->', e.response);
+        alert(e.response.data.message)
+      }
     } else {
       console.error('Invalid input');
     }
@@ -103,9 +140,11 @@ export default function SignInScreen() {
     navigation.navigate(ROUTES.SIGN_UP)
   }
 
-  function handleForgotPassword(){
+  function handleForgotPassword() {
     navigation.navigate(ROUTES.FORGOT_PASSWORD_NUMBER)
   }
+
+
 
   return (
     <ScrollView style={{ width: '90%', alignSelf: 'center' }}>
@@ -212,7 +251,7 @@ const styles = StyleSheet.create({
   forgotPassword: {
     alignSelf: 'center',
     textDecorationLine: 'underline',
-    color:'blue',
-    marginTop:20
+    color: 'blue',
+    marginTop: 20
   }
 });

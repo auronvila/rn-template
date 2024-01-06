@@ -8,6 +8,8 @@ import { useLayoutEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { ScreenProp } from '../publicScreens/WelcomeScreen';
 import AlertDialog from '../../components/AlertDialog';
+import axios from 'axios/index';
+import { ROUTES } from '../../constants';
 
 const validationSchema = yup.object().shape({
   email: yup.string().required('Lütfen mail adresi giriniz').email('Lütfen geçerli bir mail adresi giriniz')
@@ -28,8 +30,23 @@ export default function ForgotPasswordMail() {
   }, [])
 
   const onSubmit = async (data: { email: string }) => {
-    setAlertMessage('Lütfen girdiğniz mail adresini kontrol edin.')
-    console.log(data)
+    const dto = {
+      email_address: data.email
+    }
+    try {
+      const response = await axios('https://transyol.caykara.dev/api/auth/forgot-password/email-address', {
+        method: 'POST',
+        data: dto,
+        headers: {
+          'Content-type': 'application/json'
+        }
+      });
+      setAlertMessage('Lütfen girdiğniz mail adresini kontrol edin ve oradan devam edin.')
+      console.log(response)
+    } catch (e) {
+      console.log('error---->', e.response);
+      alert(e.response.data.message)
+    }
   };
 
   return (
@@ -58,7 +75,10 @@ export default function ForgotPasswordMail() {
       <View style={styles.buttonWrapper}>
         <CustomButton onPress={handleSubmit(onSubmit)}>Onayla</CustomButton>
       </View>
-      <AlertDialog message={alertMessage} onClose={() => setAlertMessage('')}/>
+      <AlertDialog message={alertMessage} onClose={() => {
+        navigation.navigate(ROUTES.SIGN_IN)
+        setAlertMessage('')
+      }}/>
     </>
   )
 }

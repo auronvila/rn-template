@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ScreenProp } from '../publicScreens/WelcomeScreen';
 import { ROUTES } from '../../constants';
 import AlertDialog from '../../components/AlertDialog';
+import axios from 'axios';
 
 const validationSchema = yup.object().shape({
   phoneNumber: yup.number()
@@ -33,8 +34,22 @@ export default function ForgotPasswordNumber() {
   }, [])
 
   const onSubmit = async (data: { phoneNumber: number }) => {
-    setAlertMessage('Lütfen girdiğniz telefon numarasını kontrol edin.')
-    console.log(data)
+    const dto = {
+      phone_number: data.phoneNumber
+    }
+    try {
+      const response = await axios('https://transyol.caykara.dev/api/auth/forgot-password/phone-number', {
+        method: 'POST',
+        data: dto,
+        headers: {
+          'Content-type': 'application/json'
+        }
+      });
+      navigation.navigate(ROUTES.CODE_VERIFICATION)
+    } catch (e) {
+      console.log('error---->', e.response);
+      alert(e.response.data.message)
+    }
   };
 
   return (
@@ -67,7 +82,6 @@ export default function ForgotPasswordNumber() {
       </View>
       <AlertDialog message={alertMessage} onClose={() => {
         setAlertMessage('')
-        navigation.navigate(ROUTES.CODE_VERIFICATION)
       }}/>
     </>
   )

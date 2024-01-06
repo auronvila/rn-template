@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { ROUTES } from './constants';
-import WelcomeScreen from './screens/publicScreens/WelcomeScreen';
+import WelcomeScreen, { ScreenProp } from './screens/publicScreens/WelcomeScreen';
 import SignInScreen from './screens/auth/SignInScreen';
 import SignUpScreen from './screens/auth/SignUpScreen';
 import HomeScreen from './screens/private/HomeScreen';
@@ -15,6 +15,7 @@ import { useContext, useEffect, useState } from 'react';
 import { AuthContext, AuthContextProvider } from './store/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppLoading from 'expo-app-loading';
+import { ActivityIndicator } from 'react-native';
 
 const Stack = createNativeStackNavigator()
 
@@ -76,26 +77,32 @@ function AuthanticatedRoutes() {
 function Root() {
   const { authToken, updateAuth, isAuthenticated } = useContext(AuthContext);
   const [isLoggingIn, setIsLoggingIn] = useState(true)
+  const navigation = useNavigation<ScreenProp>();
 
   useEffect(() => {
     async function getToken() {
       try {
+        setIsLoggingIn(true)
         const storedToken = await AsyncStorage.getItem('authToken');
         if (storedToken) {
           updateAuth(storedToken);
         }
       } catch (e) {
         console.error('Error getting token:', e);
+        updateAuth(null);
+        navigation.navigate(ROUTES.SIGN_IN)
+
       } finally {
         setIsLoggingIn(false);
       }
     }
+
     getToken();
   }, [updateAuth]);
 
 
   if (isLoggingIn) {
-    <AppLoading/>
+    <ActivityIndicator size={'large'}/>
   }
   return <NavigationWrapper/>
 }

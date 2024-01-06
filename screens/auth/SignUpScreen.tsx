@@ -12,7 +12,13 @@ import { useLayoutEffect } from 'react';
 const validationSchema = yup.object().shape({
   fullName: yup.string().required('Full name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  phoneNumber: yup.string().matches(/^\d+$/, 'Phone number must contain only digits').required('Phone number is required'),
+  phoneNumber: yup.string()
+    .matches(/^\d+$/, 'Phone number must contain only digits')
+    .required('Phone number is required')
+    .test('phoneNumber', 'Lütfen geçerli bir telefon numarası giriniz', (value) => {
+      const phoneRegex = /^\d{10}$/;
+      return phoneRegex.test(value);
+    }),
   password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
   verifyPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
 });

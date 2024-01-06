@@ -10,13 +10,12 @@ export default function CodeVerification() {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerTitle: 'Kod Ekraı'
+      headerTitle: 'Kod Ekranı'
     })
   }, [])
 
-  function handleOnFill() {
-    console.log('filled')
-    navigation.navigate(ROUTES.NEW_PASSWORD)
+  function handleOnFill(data: string) {
+    navigation.navigate(ROUTES.NEW_PASSWORD, { code: data })
   }
 
   return (
@@ -27,7 +26,7 @@ export default function CodeVerification() {
         autoFocus={false}
         focusColor={'orange'}
         theme={{ containerStyle: styles.containerStyle }}
-        numberOfDigits={6}
+        numberOfDigits={4}
         // onTextChange={(text) => console.log(text)}
       />
     </>
