@@ -4,6 +4,7 @@ import { useLayoutEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { ScreenProp } from '../publicScreens/WelcomeScreen';
 import { ROUTES } from '../../constants';
+import axios from 'axios';
 
 export default function CodeVerification() {
   const navigation = useNavigation<ScreenProp>();
@@ -14,8 +15,25 @@ export default function CodeVerification() {
     })
   }, [])
 
-  function handleOnFill(data: string) {
-    navigation.navigate(ROUTES.NEW_PASSWORD, { code: data })
+  async function handleOnFill(data: string) {
+    const dto = {
+      code: data,
+    }
+
+    try {
+      const response = await axios('https://transyol.caykara.dev/api/auth/check-validation-code', {
+        method: 'POST',
+        data: dto,
+        headers: {
+          'Content-type': 'application/json'
+        }
+      });
+      navigation.navigate(ROUTES.NEW_PASSWORD, { code: data })
+
+    } catch (e) {
+      console.log('error---->', e.response);
+      alert(e.response.data.message)
+    }
   }
 
   return (

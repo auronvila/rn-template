@@ -10,17 +10,17 @@ import CustomButton from '../../components/Button';
 import { useLayoutEffect } from 'react';
 
 const validationSchema = yup.object().shape({
-  fullName: yup.string().required('Full name is required'),
-  email: yup.string().email('Invalid email').required('Email is required'),
+  fullName: yup.string().required('Lütfen isim soyisim giriniz'),
+  email: yup.string().email('Lütfen geçerli bir mail adresi giriniz').required('Lütfen mail giriniz'),
   phoneNumber: yup.string()
-    .matches(/^\d+$/, 'Phone number must contain only digits')
+    .matches(/^\d+$/, 'Telefon numarası sadece numara içerebilir')
     .required('Phone number is required')
     .test('phoneNumber', 'Lütfen geçerli bir telefon numarası giriniz', (value) => {
       const phoneRegex = /^\d{10}$/;
       return phoneRegex.test(value);
     }),
-  password: yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
-  verifyPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match')
+  password: yup.string().min(6, 'Parola en az 6 karakterden oluşmalıdır').required('Lütfen parola giriniz'),
+  verifyPassword: yup.string().oneOf([yup.ref('password'), null], 'Parolalar eşleşmıyor')
 });
 
 export default function SignUpScreen() {
@@ -37,7 +37,6 @@ export default function SignUpScreen() {
   }, [])
 
   function handleSignUp(data) {
-    console.log(data)
     navigation.replace(ROUTES.ACCOUNT_TYPE, { data: data })
   }
 
@@ -137,7 +136,7 @@ export default function SignUpScreen() {
 
 const styles = StyleSheet.create({
   button: {
-    marginRight:20,
+    marginRight: 20,
     width: 140,
     alignSelf: 'flex-end',
     marginTop: 10

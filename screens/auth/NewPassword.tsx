@@ -57,13 +57,11 @@ export default function NewPassword() {
         }
       });
       setAlertMessage('Parolanız başarılı bir şekilde güncellenmiştir lütfen güncel bilgiler ile giriş yapınız.')
-      navigation.navigate(ROUTES.SIGN_IN)
 
     } catch (e) {
       console.log('error---->', e.response);
       alert(e.response.data.message)
     }
-    navigation.navigate(ROUTES.SIGN_IN)
   };
 
   return (
@@ -94,6 +92,7 @@ export default function NewPassword() {
       </View>
       <AlertDialog message={alertMessage} onClose={() => {
         setAlertMessage('')
+        navigation.navigate(ROUTES.SIGN_IN)
       }}/>
     </>
   )

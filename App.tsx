@@ -33,7 +33,7 @@ function NavigationWrapper() {
 
 function UnAuthanticatedRoutes() {
   return (
-    <Stack.Navigator initialRouteName={ROUTES.WELCOME}>
+    <Stack.Navigator>
       <Stack.Screen component={WelcomeScreen} name={ROUTES.WELCOME}/>
       <Stack.Screen component={ForgotPasswordNumber} name={ROUTES.FORGOT_PASSWORD_NUMBER}/>
       <Stack.Screen component={ForgotPasswordMail} name={ROUTES.FORGOT_PASSWORD_EMAIL}/>

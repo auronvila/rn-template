@@ -15,9 +15,8 @@ import * as AppleAuthentication from 'expo-apple-authentication';
 import { initializeApp } from 'firebase/app';
 import CustomButton from '../../components/Button';
 import axios from 'axios';
-import { SignUpReqDto } from '../../services/dto/Auth';
+import { AntDesign } from '@expo/vector-icons';
 import { AuthContext } from '../../store/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const validationSchema = yup.object().shape({
@@ -145,7 +144,6 @@ export default function SignInScreen() {
   }
 
 
-
   return (
     <ScrollView style={{ width: '90%', alignSelf: 'center' }}>
       <View style={styles.inputWrapper}>
@@ -188,53 +186,65 @@ export default function SignInScreen() {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <CustomButton onPress={() => promptAsync()}>Google</CustomButton>
         <CustomButton onPress={handleSignUpNavigation}>Hesap Oluştur</CustomButton>
         <CustomButton onPress={handleSubmit(onSubmit)}>Giriş Yap</CustomButton>
       </View>
-      <Text onPress={handleForgotPassword} style={styles.forgotPassword}>Parolamı Unuttum</Text>
-      {Platform.OS === 'ios' && (
-        <View style={styles.container}>
-          <AppleAuthentication.AppleAuthenticationButton
-            buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
-            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
-            cornerRadius={5}
-            style={styles.button}
-            onPress={async () => {
-              try {
-                const credential = await AppleAuthentication.signInAsync({
-                  requestedScopes: [
-                    AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-                    AppleAuthentication.AppleAuthenticationScope.EMAIL
-                  ]
-                });
-                console.log(credential)
-              } catch (e) {
-                if (e.code === 'ERR_REQUEST_CANCELED') {
-                  Alert.alert('you cancelled the apple login process')
-                } else {
-                  Alert.alert('an err occureed')
-                }
-              }
-            }}
-          />
+      <View style={styles.socialButtonWrapper}>
+        <View style={{ backgroundColor: '#ccc', padding: 10, borderRadius: 20 }}>
+          <AntDesign
+            style={{ alignSelf: 'center' }}
+            onPress={() => promptAsync()}
+            name="google"
+            size={24}
+            color="black"/>
         </View>
-      )}
+        {Platform.OS === 'ios' && (
+          <View>
+            <AppleAuthentication.AppleAuthenticationButton
+              buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+              buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.WHITE_OUTLINE}
+              cornerRadius={20}
+              style={styles.button}
+              onPress={async () => {
+                try {
+                  const credential = await AppleAuthentication.signInAsync({
+                    requestedScopes: [
+                      AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+                      AppleAuthentication.AppleAuthenticationScope.EMAIL
+                    ]
+                  });
+                  console.log(credential)
+                } catch (e) {
+                  if (e.code === 'ERR_REQUEST_CANCELED') {
+                    Alert.alert('you cancelled the apple login process')
+                  } else {
+                    Alert.alert('an err occureed')
+                  }
+                }
+              }}
+            />
+          </View>
+        )}
+      </View>
+      <Text onPress={handleForgotPassword} style={styles.forgotPassword}>Parolamı Unuttum</Text>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: 30,
+  socialButtonWrapper: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    gap: 50,
+    marginTop: 20
   },
+
   buttonContainer: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    gap: 30
   },
   inputWrapper: {
     borderStyle: 'solid',
@@ -245,13 +255,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20
   },
   button: {
-    width: 200,
+    width: 50,
     height: 44
   },
   forgotPassword: {
     alignSelf: 'center',
     textDecorationLine: 'underline',
     color: 'blue',
-    marginTop: 20
+    marginTop: 20,
+    marginBottom: 20
   }
 });
