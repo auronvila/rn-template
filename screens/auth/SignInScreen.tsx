@@ -1,22 +1,22 @@
-import { Button, Text, View, StyleSheet, Alert, Platform, ScrollView } from 'react-native';
+import {Button, Text, View, StyleSheet, Alert, Platform, ScrollView} from 'react-native';
 import Input from '../../components/Input';
-import { useForm, Controller } from 'react-hook-form';
+import {useForm, Controller} from 'react-hook-form';
 import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from '@react-navigation/native';
-import { ScreenProp } from '../publicScreens/WelcomeScreen';
-import { ROUTES } from '../../constants';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {useNavigation} from '@react-navigation/native';
+import {ScreenProp} from '../publicScreens/WelcomeScreen';
+import {ROUTES} from '../../constants';
 import * as Google from 'expo-auth-session/providers/google'
 import * as WebBrowser from 'expo-web-browser'
-import { getAuth, signInWithCredential } from 'firebase/auth'
-import { useContext, useEffect, useLayoutEffect, useState } from 'react';
+import {getAuth, signInWithCredential} from 'firebase/auth'
+import {useContext, useEffect, useLayoutEffect, useState} from 'react';
 import firebase from 'firebase/compat';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import { initializeApp } from 'firebase/app';
+import {initializeApp} from 'firebase/app';
 import CustomButton from '../../components/Button';
 import axios from 'axios';
-import { AntDesign } from '@expo/vector-icons';
-import { AuthContext } from '../../store/auth';
+import {AntDesign} from '@expo/vector-icons';
+import {AuthContext} from '../../store/auth';
 
 
 const validationSchema = yup.object().shape({
@@ -35,7 +35,7 @@ WebBrowser.maybeCompleteAuthSession()
 
 export default function SignInScreen() {
   const [userInfo, setUserInfo] = useState()
-  const { updateAuth } = useContext(AuthContext)
+  const {updateAuth} = useContext(AuthContext)
   const navigation = useNavigation<ScreenProp>();
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId: '100702233245-dr5h3cbfl406dp9ob0mq96ad8tkd3jpi.apps.googleusercontent.com',
@@ -61,7 +61,7 @@ export default function SignInScreen() {
     const auth = getAuth(app)
 
     if (response?.type === 'success') {
-      const { id_token } = response.params;
+      const {id_token} = response.params;
 
       const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
       signInWithCredential(auth, credential).then(i => console.log('IIIIIIII', i))
@@ -81,7 +81,7 @@ export default function SignInScreen() {
   }, [])
 
 
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {control, handleSubmit, formState: {errors}} = useForm({
     resolver: yupResolver(validationSchema)
   });
 
@@ -105,7 +105,7 @@ export default function SignInScreen() {
             'Content-type': 'application/json'
           }
         });
-        updateAuth(response.data.access_token)
+        updateAuth(response.data.access_token, 'USER')
       } catch (e) {
         console.log('error---->', e.response);
         alert(e.response.data.message)
@@ -117,14 +117,14 @@ export default function SignInScreen() {
       }
 
       try {
-        const response = await axios('https://transyol.caykara.dev/api/auth/sign-in/phone-number', {
+        const response = await axios(`${process.env.EXPO_PUBLIC_API_URL}/auth/sign-in/phone-number`, {
           method: 'POST',
           data: dto,
           headers: {
             'Content-type': 'application/json'
           }
         });
-        updateAuth(response.data.access_token)
+        updateAuth(response.data.access_token, 'USER')
       } catch (e) {
         console.log('error---->', e.response);
         alert(e.response.data.message)
@@ -145,16 +145,16 @@ export default function SignInScreen() {
 
 
   return (
-    <ScrollView style={{ width: '90%', alignSelf: 'center' }}>
+    <ScrollView style={{width: '90%', alignSelf: 'center'}}>
       <View style={styles.inputWrapper}>
         <Controller
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({field: {onChange, onBlur, value}}) => (
             <Input
               name={'emailOrPhone'}
               defaultValue={''}
               isInvalid={!!errors.emailOrPhone}
-              rules={{ required: 'Email is required', pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/ }}
+              rules={{required: 'Email is required', pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/}}
               label="Mail veya telefon numarası"
               keyboardType="email-address"
               secure={false}
@@ -167,7 +167,7 @@ export default function SignInScreen() {
         />
         <Controller
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({field: {onChange, onBlur, value}}) => (
             <Input
               errorText={errors.password?.message}
               control={control}
@@ -181,7 +181,7 @@ export default function SignInScreen() {
             />
           )}
           name="password"
-          rules={{ required: true }}
+          rules={{required: true}}
           defaultValue=""
         />
       </View>
@@ -190,9 +190,9 @@ export default function SignInScreen() {
         <CustomButton onPress={handleSubmit(onSubmit)}>Giriş Yap</CustomButton>
       </View>
       <View style={styles.socialButtonWrapper}>
-        <View style={{ backgroundColor: '#ccc', padding: 10, borderRadius: 20 }}>
+        <View style={{backgroundColor: '#ccc', padding: 10, borderRadius: 20}}>
           <AntDesign
-            style={{ alignSelf: 'center' }}
+            style={{alignSelf: 'center'}}
             onPress={() => promptAsync()}
             name="google"
             size={24}

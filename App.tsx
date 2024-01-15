@@ -1,8 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { ROUTES } from './constants';
-import WelcomeScreen, { ScreenProp } from './screens/publicScreens/WelcomeScreen';
+import {StatusBar} from 'expo-status-bar';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {NavigationContainer, useNavigation} from '@react-navigation/native';
+import {ROUTES} from './constants';
+import WelcomeScreen, {ScreenProp} from './screens/publicScreens/WelcomeScreen';
 import SignInScreen from './screens/auth/SignInScreen';
 import SignUpScreen from './screens/auth/SignUpScreen';
 import HomeScreen from './screens/private/HomeScreen';
@@ -11,17 +11,17 @@ import ForgotPasswordNumber from './screens/auth/ForgotPasswordNumber';
 import ForgotPasswordMail from './screens/auth/ForgotPasswordMail';
 import CodeVerification from './screens/auth/CodeVerification';
 import NewPassword from './screens/auth/NewPassword';
-import { useContext, useEffect, useState } from 'react';
-import { AuthContext, AuthContextProvider } from './store/auth';
+import {useContext, useEffect, useState} from 'react';
+import {AuthContext, AuthContextProvider} from './store/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppLoading from 'expo-app-loading';
-import { ActivityIndicator } from 'react-native';
+import {ActivityIndicator} from 'react-native';
 
 const Stack = createNativeStackNavigator()
 
 
 function NavigationWrapper() {
-  const { authToken, updateAuth, isAuthenticated } = useContext(AuthContext);
+  const {userInfo, updateAuth, isAuthenticated} = useContext(AuthContext);
 
   return (
     <>
@@ -75,7 +75,7 @@ function AuthanticatedRoutes() {
 
 
 function Root() {
-  const { authToken, updateAuth, isAuthenticated } = useContext(AuthContext);
+  const {userInfo, updateAuth, isAuthenticated} = useContext(AuthContext);
   const [isLoggingIn, setIsLoggingIn] = useState(true)
   const navigation = useNavigation<ScreenProp>();
 
@@ -83,22 +83,23 @@ function Root() {
     async function getToken() {
       try {
         setIsLoggingIn(true)
-        const storedToken = await AsyncStorage.getItem('authToken');
-        if (storedToken) {
-          updateAuth(storedToken);
+        const userInfoString = await AsyncStorage.getItem('userInfo');
+        const userInfo = JSON.parse(userInfoString || "{}");
+        if (userInfo) {
+          updateAuth(userInfo.token, 'USER');
         }
       } catch (e) {
         console.error('Error getting token:', e);
-        updateAuth(null);
+        updateAuth(null, null);
         navigation.navigate(ROUTES.SIGN_IN)
-
+        return
       } finally {
         setIsLoggingIn(false);
       }
     }
 
     getToken();
-  }, [updateAuth]);
+  }, []);
 
 
   if (isLoggingIn) {

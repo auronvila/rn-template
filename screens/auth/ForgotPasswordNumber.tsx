@@ -38,7 +38,7 @@ export default function ForgotPasswordNumber() {
       phone_number: data.phoneNumber
     }
     try {
-      const response = await axios('https://transyol.caykara.dev/api/auth/forgot-password/phone-number', {
+      const response = await axios(`${process.env.EXPO_PUBLIC_API_URL}/auth/forgot-password/phone-number`, {
         method: 'POST',
         data: dto,
         headers: {
