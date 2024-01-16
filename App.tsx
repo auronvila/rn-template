@@ -16,6 +16,9 @@ import {AuthContext, AuthContextProvider} from './store/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppLoading from 'expo-app-loading';
 import {ActivityIndicator} from 'react-native';
+import UserPersonalInfo from "./screens/private/personalInfo/UserPersonalInfo";
+import DriverPersonalInfo from "./screens/private/personalInfo/DriverPersonalInfo";
+import TransporterPersonalInfo from "./screens/private/personalInfo/TransporterPersonalInfo";
 
 const Stack = createNativeStackNavigator()
 
@@ -53,6 +56,15 @@ function UnAuthanticatedRoutes() {
         }}
         component={SignInScreen}
         name={ROUTES.SIGN_IN}/>
+      <Stack.Screen
+        component={UserPersonalInfo}
+        name={ROUTES.USER_PERSONAL_INFO}/>
+      <Stack.Screen
+        component={DriverPersonalInfo}
+        name={ROUTES.DRIVER_PERSONAL_INFO}/>
+      <Stack.Screen
+        component={TransporterPersonalInfo}
+        name={ROUTES.TRANSPORTER_PERSONAL_INFO}/>
     </Stack.Navigator>
   )
 }

@@ -105,6 +105,7 @@ export default function SignInScreen() {
             'Content-type': 'application/json'
           }
         });
+        navigation.navigate(ROUTES.HOME)
         updateAuth(response.data.access_token, 'USER')
       } catch (e) {
         console.log('error---->', e.response);

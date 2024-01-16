@@ -7,5 +7,8 @@ export default {
   FORGOT_PASSWORD_NUMBER: 'ForgotPasswordNumber',
   FORGOT_PASSWORD_EMAIL: 'ForgotPasswordEmail',
   CODE_VERIFICATION: 'CodeVerification',
-  NEW_PASSWORD:'NewPassword'
+  NEW_PASSWORD: 'NewPassword',
+  USER_PERSONAL_INFO: 'UserPersonalInfo',
+  DRIVER_PERSONAL_INFO: 'DriverPersonalInfo',
+  TRANSPORTER_PERSONAL_INFO: 'TransporterPersonalInfo'
 }

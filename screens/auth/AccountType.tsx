@@ -2,7 +2,7 @@ import {Button, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
 import {useContext, useEffect, useState} from 'react';
 import {ScreenProp} from '../publicScreens/WelcomeScreen';
-import {ROUTES} from '../../constants';
+import {ROUTES, USER_ROLES} from '../../constants';
 import CustomButton from '../../components/Button';
 import axios, {AxiosResponse} from 'axios';
 import {SignUpReqDto} from '../../services/dto/Auth';
@@ -46,8 +46,19 @@ export default function AccountType() {
           'Content-type': 'application/json'
         }
       });
-      // todo info ekranina yonlendir
-      setAlertMessage('kulanıcı başarılı bir şekilde oluşmuştur lütfen yazdıgnız bilgiler ile giriş yapın');
+      if (userRoleValue === USER_ROLES.USER) {
+        navigation.navigate(ROUTES.USER_PERSONAL_INFO)
+      }
+
+      if (userRoleValue === USER_ROLES.DRIVER) {
+        navigation.navigate(ROUTES.DRIVER_PERSONAL_INFO)
+      }
+
+      if (userRoleValue === USER_ROLES.TRANSPORTER) {
+        navigation.navigate(ROUTES.TRANSPORTER_PERSONAL_INFO)
+      }
+
+      // setAlertMessage('kulanıcı başarılı bir şekilde oluşmuştur lütfen yazdıgnız bilgiler ile giriş yapın');
 
     } catch (e) {
       console.log('error---->', e.response);
@@ -61,9 +72,10 @@ export default function AccountType() {
     <SafeAreaView style={{top: 70}}>
       <Text style={styles.mainText}>Lütfen Bir Hesap Türü Seçin</Text>
       <View style={styles.buttonWrapper}>
-        <CustomButton onPress={() => getServiceHandler(0)}>Kulanıcı</CustomButton>
-        <CustomButton styles={{marginHorizontal: 15}} onPress={() => getServiceHandler(1)}>Taşıyıcı</CustomButton>
-        <CustomButton onPress={() => getServiceHandler(2)}>Şoför</CustomButton>
+        <CustomButton onPress={() => getServiceHandler(USER_ROLES.USER)}>Kulanıcı</CustomButton>
+        <CustomButton styles={{marginHorizontal: 15}}
+                      onPress={() => getServiceHandler(USER_ROLES.TRANSPORTER)}>Taşıyıcı</CustomButton>
+        <CustomButton onPress={() => getServiceHandler(USER_ROLES.DRIVER)}>Şoför</CustomButton>
       </View>
       <AlertDialog message={alertMessage} onClose={() => {
         navigation.navigate(ROUTES.SIGN_IN);
