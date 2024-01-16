@@ -8,7 +8,7 @@ type ButtonProps = {
 
 export default function CustomButton(props: ButtonProps) {
   return (
-    <Pressable style={({ pressed }) => [styles.button, props.styles && props.styles, pressed && styles.pressed]}
+    <Pressable style={({ pressed }) => [styles.button, props.styles , pressed && styles.pressed]}
                onPress={props.onPress}>
       <Text style={styles.textStyle}> {props.children}</Text>
     </Pressable>
@@ -17,7 +17,7 @@ export default function CustomButton(props: ButtonProps) {
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 7,
+    paddingVertical: 10,
     paddingHorizontal: 10,
     borderStyle: 'solid',
     borderWidth: 2,

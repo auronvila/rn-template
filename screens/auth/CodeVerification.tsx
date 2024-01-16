@@ -21,7 +21,7 @@ export default function CodeVerification() {
     }
 
     try {
-      const response = await axios('https://transyol.caykara.dev/api/auth/check-validation-code', {
+      const response = await axios(`${process.env.EXPO_PUBLIC_API_URL}/auth/check-validation-code`, {
         method: 'POST',
         data: dto,
         headers: {

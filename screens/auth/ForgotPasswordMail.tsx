@@ -34,7 +34,7 @@ export default function ForgotPasswordMail() {
       email_address: data.email
     }
     try {
-      const response = await axios('https://transyol.caykara.dev/api/auth/forgot-password/email-address', {
+      const response = await axios(`${process.env.EXPO_PUBLIC_API_URL}/auth/forgot-password/email-address`, {
         method: 'POST',
         data: dto,
         headers: {

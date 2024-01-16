@@ -8,12 +8,13 @@ const BaseService = axios.create({
 
 BaseService.interceptors.request.use(
   async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-    const authToken = AsyncStorage.getItem('authToken');
+    const userInfoString = await AsyncStorage.getItem('userInfo');
+    const userInfo = JSON.parse(userInfoString || "{}");
 
-    if (!!authToken) {
+    if (userInfo && userInfo.token) {
       config.headers = {
         ...config.headers,
-        'Authorization': `Bearer ${authToken}`
+        'Authorization': `Bearer ${userInfo.token}`
       } as AxiosRequestHeaders;
     }
 
@@ -21,6 +22,7 @@ BaseService.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 )
+
 
 
 BaseService.interceptors.response.use(
