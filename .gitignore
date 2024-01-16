@@ -30,7 +30,6 @@ yarn-error.*
 *.pem
 ./.idea
 # local env files
-.env*.local
 
 # typescript
 *.tsbuildinfo
