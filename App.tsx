@@ -19,6 +19,7 @@ import {ActivityIndicator} from 'react-native';
 import UserPersonalInfo from "./screens/private/personalInfo/UserPersonalInfo";
 import DriverPersonalInfo from "./screens/private/personalInfo/DriverPersonalInfo";
 import TransporterPersonalInfo from "./screens/private/personalInfo/TransporterPersonalInfo";
+import HomeTabNavigator from "./navigators/BottomTabNavigator";
 
 const Stack = createNativeStackNavigator()
 
@@ -38,6 +39,12 @@ function UnAuthanticatedRoutes() {
   return (
     <Stack.Navigator>
       <Stack.Screen component={WelcomeScreen} name={ROUTES.WELCOME}/>
+      <Stack.Screen
+        options={{
+          headerLeft: props => <></>
+        }}
+        component={SignInScreen}
+        name={ROUTES.SIGN_IN}/>
       <Stack.Screen component={ForgotPasswordNumber} name={ROUTES.FORGOT_PASSWORD_NUMBER}/>
       <Stack.Screen component={ForgotPasswordMail} name={ROUTES.FORGOT_PASSWORD_EMAIL}/>
       <Stack.Screen component={NewPassword} name={ROUTES.NEW_PASSWORD}/>
@@ -50,12 +57,6 @@ function UnAuthanticatedRoutes() {
         name={ROUTES.ACCOUNT_TYPE}/>
       <Stack.Screen
         component={SignUpScreen} name={ROUTES.SIGN_UP}/>
-      <Stack.Screen
-        options={{
-          headerLeft: props => <></>
-        }}
-        component={SignInScreen}
-        name={ROUTES.SIGN_IN}/>
       <Stack.Screen
         component={UserPersonalInfo}
         name={ROUTES.USER_PERSONAL_INFO}/>
@@ -71,7 +72,9 @@ function UnAuthanticatedRoutes() {
 
 function AuthanticatedRoutes() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+    screenOptions={{headerShown:false}}
+    >
       <Stack.Screen
         options={
           {
@@ -79,8 +82,8 @@ function AuthanticatedRoutes() {
             gestureEnabled: true
           }
         }
-        component={HomeScreen}
-        name={ROUTES.HOME}/>
+        component={HomeTabNavigator}
+        name={ROUTES.TAB_NAVIGATOR}/>
     </Stack.Navigator>
   )
 }
@@ -97,13 +100,16 @@ function Root() {
         setIsLoggingIn(true)
         const userInfoString = await AsyncStorage.getItem('userInfo');
         const userInfo = JSON.parse(userInfoString || "{}");
-        if (userInfo) {
+        console.log(userInfo)
+        if (userInfo.token) {
           updateAuth(userInfo.token, 'USER');
+        } else {
+          navigation.navigate(ROUTES.SIGN_IN)
         }
       } catch (e) {
         console.error('Error getting token:', e);
-        updateAuth(null, null);
         navigation.navigate(ROUTES.SIGN_IN)
+        updateAuth(null, null);
         return
       } finally {
         setIsLoggingIn(false);

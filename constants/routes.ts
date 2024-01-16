@@ -4,6 +4,7 @@ export default {
   SIGN_UP: 'SignUp',
   ACCOUNT_TYPE: 'AccountType',
   HOME: 'HomeScreen',
+  TAB_NAVIGATOR:'TabNavigator',
   FORGOT_PASSWORD_NUMBER: 'ForgotPasswordNumber',
   FORGOT_PASSWORD_EMAIL: 'ForgotPasswordEmail',
   CODE_VERIFICATION: 'CodeVerification',

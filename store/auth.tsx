@@ -20,7 +20,7 @@ export function AuthContextProvider({children}: { children: ReactNode }) {
 
   async function logOut() {
     setUserInfo(null)
-    await AsyncStorage.clear()
+    await AsyncStorage.removeItem('userInfo')
     navigation.navigate(ROUTES.SIGN_IN)
   }
 
