@@ -56,14 +56,26 @@ function UnAuthanticatedRoutes() {
         component={AccountType}
         name={ROUTES.ACCOUNT_TYPE}/>
       <Stack.Screen
+        options={{
+          headerLeft: props => <></>
+        }}
         component={SignUpScreen} name={ROUTES.SIGN_UP}/>
       <Stack.Screen
+        options={{
+          headerLeft: props => <></>
+        }}
         component={UserPersonalInfo}
         name={ROUTES.USER_PERSONAL_INFO}/>
       <Stack.Screen
+        options={{
+          headerLeft: props => <></>
+        }}
         component={DriverPersonalInfo}
         name={ROUTES.DRIVER_PERSONAL_INFO}/>
       <Stack.Screen
+        options={{
+          headerLeft: props => <></>
+        }}
         component={TransporterPersonalInfo}
         name={ROUTES.TRANSPORTER_PERSONAL_INFO}/>
     </Stack.Navigator>
@@ -73,7 +85,7 @@ function UnAuthanticatedRoutes() {
 function AuthanticatedRoutes() {
   return (
     <Stack.Navigator
-    screenOptions={{headerShown:false}}
+      screenOptions={{headerShown: false}}
     >
       <Stack.Screen
         options={
@@ -100,7 +112,6 @@ function Root() {
         setIsLoggingIn(true)
         const userInfoString = await AsyncStorage.getItem('userInfo');
         const userInfo = JSON.parse(userInfoString || "{}");
-        console.log(userInfo)
         if (userInfo.token) {
           updateAuth(userInfo.token, 'USER');
         } else {
@@ -116,8 +127,8 @@ function Root() {
       }
     }
 
-    getToken();
-  }, []);
+    getToken()
+  }, [userInfo]);
 
 
   if (isLoggingIn) {

@@ -20,7 +20,7 @@ export default function UserCorporateInfoForm(props: { switchComponent: ReactEle
   });
 
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data:any) => {
     console.log(data)
   };
 

@@ -46,7 +46,7 @@ export default function ForgotPasswordNumber() {
         }
       });
       navigation.navigate(ROUTES.CODE_VERIFICATION)
-    } catch (e) {
+    } catch (e:any) {
       console.log('error---->', e.response);
       alert(e.response.data.message)
     }

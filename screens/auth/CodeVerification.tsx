@@ -30,7 +30,7 @@ export default function CodeVerification() {
       });
       navigation.navigate(ROUTES.NEW_PASSWORD, { code: data })
 
-    } catch (e) {
+    } catch (e:any) {
       console.log('error---->', e.response);
       alert(e.response.data.message)
     }

@@ -86,7 +86,7 @@ export default function SignInScreen() {
   });
 
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     const input = data.emailOrPhone;
     const isEmail = /\S+@\S+\.\S+/.test(input);
     const isPhoneNumber = /^\d{10}$/.test(input);
@@ -107,7 +107,7 @@ export default function SignInScreen() {
         });
         navigation.navigate(ROUTES.HOME)
         updateAuth(response.data.access_token, 'USER')
-      } catch (e) {
+      } catch (e: any) {
         console.log('error---->', e.response);
         alert(e.response.data.message)
       }
@@ -126,7 +126,7 @@ export default function SignInScreen() {
           }
         });
         updateAuth(response.data.access_token, 'USER')
-      } catch (e) {
+      } catch (e: any) {
         console.log('error---->', e.response);
         alert(e.response.data.message)
       }
@@ -214,8 +214,7 @@ export default function SignInScreen() {
                       AppleAuthentication.AppleAuthenticationScope.EMAIL
                     ]
                   });
-                  console.log(credential)
-                } catch (e) {
+                } catch (e:any) {
                   if (e.code === 'ERR_REQUEST_CANCELED') {
                     Alert.alert('you cancelled the apple login process')
                   } else {

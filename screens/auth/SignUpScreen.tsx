@@ -1,13 +1,21 @@
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import {Button, ScrollView, StyleSheet, Text, View} from 'react-native';
 import * as yup from 'yup';
-import { Controller, useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigation } from '@react-navigation/native';
-import { ScreenProp } from '../publicScreens/WelcomeScreen';
+import {Controller, useForm} from 'react-hook-form';
+import {yupResolver} from '@hookform/resolvers/yup';
+import {useNavigation} from '@react-navigation/native';
+import {ScreenProp} from '../publicScreens/WelcomeScreen';
 import Input from '../../components/Input';
-import { ROUTES } from '../../constants';
+import {ROUTES} from '../../constants';
 import CustomButton from '../../components/Button';
-import { useLayoutEffect } from 'react';
+import {useLayoutEffect} from 'react';
+
+type SignUpReqDto = {
+  fullName: string,
+  email: string,
+  phoneNumber: string,
+  verifyPassword?: string,
+  password: string
+}
 
 const validationSchema = yup.object().shape({
   fullName: yup.string().required('Lütfen isim soyisim giriniz'),
@@ -20,11 +28,11 @@ const validationSchema = yup.object().shape({
       return phoneRegex.test(value);
     }),
   password: yup.string().min(6, 'Parola en az 6 karakterden oluşmalıdır').required('Lütfen parola giriniz'),
-  verifyPassword: yup.string().oneOf([yup.ref('password'), null], 'Parolalar eşleşmıyor')
+  verifyPassword: yup.string().oneOf([yup.ref('password')], 'Parolalar eşleşmıyor')
 });
 
 export default function SignUpScreen() {
-  const { control, handleSubmit, formState: { errors } } = useForm({
+  const {control, handleSubmit, formState: {errors}} = useForm({
     resolver: yupResolver(validationSchema)
   });
   const navigation = useNavigation<ScreenProp>();
@@ -36,16 +44,16 @@ export default function SignUpScreen() {
     })
   }, [])
 
-  function handleSignUp(data) {
-    navigation.replace(ROUTES.ACCOUNT_TYPE, { data: data })
+  function handleSignUp(data: SignUpReqDto) {
+    navigation.replace(ROUTES.ACCOUNT_TYPE, {data: data})
   }
 
   return (
-    <ScrollView style={{ width: '90%', alignSelf: 'center' }}>
+    <ScrollView style={{width: '90%', alignSelf: 'center'}}>
       <View style={styles.inputWrapper}>
         <Controller
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({field: {onChange, onBlur, value}}) => (
             <Input
               secure={false}
               keyboardType={'default'}
@@ -62,7 +70,7 @@ export default function SignUpScreen() {
         />
         <Controller
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({field: {onChange, onBlur, value}}) => (
             <Input
               name={'email'}
               defaultValue={''}
@@ -79,7 +87,7 @@ export default function SignUpScreen() {
         />
         <Controller
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({field: {onChange, onBlur, value}}) => (
             <Input
               control={control}
               name={'phoneNumber'}
@@ -96,7 +104,7 @@ export default function SignUpScreen() {
         />
         <Controller
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({field: {onChange, onBlur, value}}) => (
             <Input
               name={'password'}
               defaultValue={''}
@@ -113,7 +121,7 @@ export default function SignUpScreen() {
         />
         <Controller
           control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
+          render={({field: {onChange, onBlur, value}}) => (
             <Input
               name={'verifyPassword'}
               defaultValue={''}

@@ -58,7 +58,7 @@ export default function NewPassword() {
       });
       setAlertMessage('Parolanız başarılı bir şekilde güncellenmiştir lütfen güncel bilgiler ile giriş yapınız.')
 
-    } catch (e) {
+    } catch (e:any) {
       console.log('error---->', e.response);
       alert(e.response.data.message)
     }
