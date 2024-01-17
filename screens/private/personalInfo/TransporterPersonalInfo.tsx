@@ -5,6 +5,8 @@ import * as yup from "yup";
 import {useState} from "react";
 import TransporterCorporateInfoForm from "./TransporterCorporateInfoForm";
 import TransporterPersonalForm from "./TransporterPersonalForm";
+import {useNavigation} from "@react-navigation/native";
+import {ScreenProp} from "../../publicScreens/WelcomeScreen";
 
 export default function TransporterPersonalInfo() {
   const [isCorporate, setIsCorporate] = useState(false);

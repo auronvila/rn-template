@@ -5,6 +5,9 @@ import CustomButton from "../../../components/Button";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {ReactElement} from "react";
+import {useNavigation} from "@react-navigation/native";
+import {ScreenProp} from "../../publicScreens/WelcomeScreen";
+import {ROUTES} from "../../../constants";
 
 export default function TransporterCorporateInfoForm(props: { switchComponent: ReactElement }) {
   const validationSchema = yup.object().shape({
@@ -13,6 +16,7 @@ export default function TransporterCorporateInfoForm(props: { switchComponent: R
     title: yup.string()
       .required('Lütfen Ünvanınızı giriniz')
   });
+  const navigation = useNavigation<ScreenProp>();
 
 
   const {control, handleSubmit, formState: {errors}} = useForm({
@@ -20,8 +24,9 @@ export default function TransporterCorporateInfoForm(props: { switchComponent: R
   });
 
 
-  const onSubmit = async (data:any) => {
+  const onSubmit = async (data: any) => {
     console.log(data)
+    navigation.navigate(ROUTES.DOCUMENTS_INFO)
   };
 
   return (
