@@ -43,7 +43,7 @@ export default function ForgotPasswordMail() {
       });
       setAlertMessage('Lütfen girdiğniz mail adresini kontrol edin ve oradan devam edin.')
       console.log(response)
-    } catch (e) {
+    } catch (e:any) {
       console.log('error---->', e.response);
       alert(e.response.data.message)
     }

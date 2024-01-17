@@ -1,4 +1,4 @@
-import {createContext, ReactNode, useState} from 'react';
+import {createContext, ReactNode, useEffect, useState} from 'react';
 import {AuthContextModel} from './model/authContextModel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
@@ -8,10 +8,15 @@ import {ScreenProp} from '../screens/publicScreens/WelcomeScreen';
 export const AuthContext = createContext<AuthContextModel>({} as AuthContextModel);
 
 export function AuthContextProvider({children}: { children: ReactNode }) {
-  const [userInfo, setUserInfo] = useState<{ token: string, role: string }>()
+  const [userInfo, setUserInfo] = useState<{ token: string | null, role: string | null } | null>()
   const navigation = useNavigation<ScreenProp>();
+  const [isAuthenticated, setIsAuthenticated] = useState(!!userInfo);
 
-  async function updateAuth(token: string, userRole: string) {
+  useEffect(() => {
+    setIsAuthenticated(!!userInfo);
+  }, [userInfo]);
+
+  async function updateAuth(token: string | null, userRole: string | null) {
     const userInfo = {token, role: userRole};
     await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
     setUserInfo(userInfo)
@@ -19,14 +24,14 @@ export function AuthContextProvider({children}: { children: ReactNode }) {
 
 
   async function logOut() {
-    setUserInfo(null)
-    await AsyncStorage.removeItem('userInfo')
-    navigation.navigate(ROUTES.SIGN_IN)
+    await AsyncStorage.removeItem('userInfo');
+    setUserInfo(null);
   }
 
 
+
   return (
-    <AuthContext.Provider value={{updateAuth, logOut, userInfo, isAuthenticated: !!userInfo}}>
+    <AuthContext.Provider value={{updateAuth, logOut, userInfo, isAuthenticated: isAuthenticated}}>
       {children}
     </AuthContext.Provider>
   );

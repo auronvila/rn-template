@@ -1,6 +1,6 @@
 export interface AuthContextModel {
-  updateAuth: (token: string, userRole: string) => void,
+  updateAuth: (token: string | null, userRole: string | null) => void,
   logOut: () => void,
-  userInfo: {token:string,role:string},
+  userInfo: { token: string | null, role: string | null } | null | undefined,
   isAuthenticated: boolean
 }

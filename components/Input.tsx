@@ -12,7 +12,7 @@ type InputProps = {
   rules?: RegisterOptions,
   defaultValue: string,
   placeHolder?: string,
-  errorText: string
+  errorText?: string
 }
 
 function Input({

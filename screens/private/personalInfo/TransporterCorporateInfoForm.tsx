@@ -20,7 +20,7 @@ export default function TransporterCorporateInfoForm(props: { switchComponent: R
   });
 
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data:any) => {
     console.log(data)
   };
 

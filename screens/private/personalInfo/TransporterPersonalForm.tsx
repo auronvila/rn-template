@@ -22,7 +22,7 @@ export default function TransporterPersonalForm(props: { switchComponent: ReactE
   });
 
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data:any) => {
     console.log(data)
   };
 
