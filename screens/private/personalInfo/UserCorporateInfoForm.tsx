@@ -5,8 +5,12 @@ import CustomButton from "../../../components/Button";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import {ReactElement} from "react";
+import {ROUTES} from "../../../constants";
+import {useNavigation} from "@react-navigation/native";
+import {ScreenProp} from "../../publicScreens/WelcomeScreen";
 
 export default function UserCorporateInfoForm(props: { switchComponent: ReactElement }) {
+  const navigation = useNavigation<ScreenProp>();
   const validationSchema = yup.object().shape({
     taxIdentityNumber: yup.number()
       .required('Lütfen Vergi kimli numarasını giriniz'),
@@ -22,6 +26,8 @@ export default function UserCorporateInfoForm(props: { switchComponent: ReactEle
 
   const onSubmit = async (data:any) => {
     console.log(data)
+    navigation.navigate(ROUTES.DOCUMENTS_INFO)
+
   };
 
   return (

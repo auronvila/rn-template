@@ -5,7 +5,6 @@ import {ROUTES} from './constants';
 import WelcomeScreen, {ScreenProp} from './screens/publicScreens/WelcomeScreen';
 import SignInScreen from './screens/auth/SignInScreen';
 import SignUpScreen from './screens/auth/SignUpScreen';
-import HomeScreen from './screens/private/HomeScreen';
 import AccountType from './screens/auth/AccountType';
 import ForgotPasswordNumber from './screens/auth/ForgotPasswordNumber';
 import ForgotPasswordMail from './screens/auth/ForgotPasswordMail';
@@ -14,12 +13,12 @@ import NewPassword from './screens/auth/NewPassword';
 import {useContext, useEffect, useState} from 'react';
 import {AuthContext, AuthContextProvider} from './store/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import AppLoading from 'expo-app-loading';
 import {ActivityIndicator} from 'react-native';
 import UserPersonalInfo from "./screens/private/personalInfo/UserPersonalInfo";
 import DriverPersonalInfo from "./screens/private/personalInfo/DriverPersonalInfo";
 import TransporterPersonalInfo from "./screens/private/personalInfo/TransporterPersonalInfo";
 import HomeTabNavigator from "./navigators/BottomTabNavigator";
+import DocumentsInfo from "./screens/private/personalInfo/DocumentsInfo";
 
 const Stack = createNativeStackNavigator()
 
@@ -78,6 +77,12 @@ function UnAuthanticatedRoutes() {
         }}
         component={TransporterPersonalInfo}
         name={ROUTES.TRANSPORTER_PERSONAL_INFO}/>
+      <Stack.Screen
+        options={{
+          headerLeft: props => <></>
+        }}
+        component={DocumentsInfo}
+        name={ROUTES.DOCUMENTS_INFO}/>
     </Stack.Navigator>
   )
 }

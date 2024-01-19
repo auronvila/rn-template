@@ -12,5 +12,6 @@ export default {
   USER_PERSONAL_INFO: 'UserPersonalInfo',
   DRIVER_PERSONAL_INFO: 'DriverPersonalInfo',
   TRANSPORTER_PERSONAL_INFO: 'TransporterPersonalInfo',
-  PROFILE_SCREEN: 'ProfileScreen'
+  PROFILE_SCREEN: 'ProfileScreen',
+  DOCUMENTS_INFO:'DocumentsInfo'
 }
