@@ -1,8 +1,8 @@
-import {StatusBar} from 'expo-status-bar';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {NavigationContainer, useNavigation} from '@react-navigation/native';
-import {ROUTES} from './constants';
-import WelcomeScreen, {ScreenProp} from './screens/publicScreens/WelcomeScreen';
+import { StatusBar } from 'expo-status-bar';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { ROUTES } from './constants';
+import WelcomeScreen, { ScreenProp } from './screens/publicScreens/WelcomeScreen';
 import SignInScreen from './screens/auth/SignInScreen';
 import SignUpScreen from './screens/auth/SignUpScreen';
 import AccountType from './screens/auth/AccountType';
@@ -10,21 +10,21 @@ import ForgotPasswordNumber from './screens/auth/ForgotPasswordNumber';
 import ForgotPasswordMail from './screens/auth/ForgotPasswordMail';
 import CodeVerification from './screens/auth/CodeVerification';
 import NewPassword from './screens/auth/NewPassword';
-import {useContext, useEffect, useState} from 'react';
-import {AuthContext, AuthContextProvider} from './store/auth';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext, AuthContextProvider } from './store/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {ActivityIndicator} from 'react-native';
-import UserPersonalInfo from "./screens/private/personalInfo/UserPersonalInfo";
-import DriverPersonalInfo from "./screens/private/personalInfo/DriverPersonalInfo";
-import TransporterPersonalInfo from "./screens/private/personalInfo/TransporterPersonalInfo";
-import HomeTabNavigator from "./navigators/BottomTabNavigator";
-import DocumentsInfo from "./screens/private/personalInfo/DocumentsInfo";
+import { ActivityIndicator } from 'react-native';
+import UserPersonalInfo from './screens/private/personalInfo/UserPersonalInfo';
+import DriverPersonalInfo from './screens/private/personalInfo/DriverPersonalInfo';
+import TransporterPersonalInfo from './screens/private/personalInfo/TransporterPersonalInfo';
+import HomeTabNavigator from './navigators/BottomTabNavigator';
+import DocumentsInfo from './screens/private/personalInfo/DocumentsInfo';
 
 const Stack = createNativeStackNavigator()
 
 
 function NavigationWrapper() {
-  const {userInfo, updateAuth, isAuthenticated} = useContext(AuthContext);
+  const { userInfo, updateAuth, isAuthenticated } = useContext(AuthContext);
 
   return (
     <>
@@ -90,7 +90,7 @@ function UnAuthanticatedRoutes() {
 function AuthanticatedRoutes() {
   return (
     <Stack.Navigator
-      screenOptions={{headerShown: false}}
+      screenOptions={{ headerShown: false }}
     >
       <Stack.Screen
         options={
@@ -107,7 +107,7 @@ function AuthanticatedRoutes() {
 
 
 function Root() {
-  const {userInfo, updateAuth, isAuthenticated} = useContext(AuthContext);
+  const { userInfo, updateAuth, isAuthenticated } = useContext(AuthContext);
   const [isLoggingIn, setIsLoggingIn] = useState(true)
   const navigation = useNavigation<ScreenProp>();
 
@@ -116,7 +116,7 @@ function Root() {
       try {
         setIsLoggingIn(true)
         const userInfoString = await AsyncStorage.getItem('userInfo');
-        const userInfo = JSON.parse(userInfoString || "{}");
+        const userInfo = JSON.parse(userInfoString || '{}');
         if (userInfo.token) {
           updateAuth(userInfo.token, 'USER');
         } else {
@@ -133,7 +133,7 @@ function Root() {
     }
 
     getToken()
-  }, [userInfo]);
+  }, [isAuthenticated]);
 
 
   if (isLoggingIn) {

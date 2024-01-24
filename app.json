@@ -23,7 +23,8 @@
       "expo-apple-authentication",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      "expo-document-picker"
     ],
     "android": {
       "googleServicesFile": "./google-services.json",
