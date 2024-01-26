@@ -1,12 +1,12 @@
-import {Button, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import {useRoute, RouteProp, useNavigation} from '@react-navigation/native';
-import {useContext, useEffect, useState} from 'react';
-import {ScreenProp} from '../publicScreens/WelcomeScreen';
-import {ROUTES, USER_ROLES} from '../../constants';
+import { Button, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
+import { useContext, useEffect, useState } from 'react';
+import { ScreenProp } from '../publicScreens/WelcomeScreen';
+import { ROUTES, USER_ROLES } from '../../constants';
 import CustomButton from '../../components/Button';
-import axios, {AxiosResponse} from 'axios';
-import {SignUpReqDto} from '../../services/dto/Auth';
-import {AuthContext} from '../../store/auth';
+import axios, { AxiosResponse } from 'axios';
+import { SignUpReqDto, SignUpResDto } from '../../services/dto/Auth';
+import { AuthContext } from '../../store/auth';
 import AlertDialog from '../../components/AlertDialog';
 
 type SignUpFormValues = {
@@ -25,12 +25,12 @@ export type RootStackParamList = {
 
 export default function AccountType() {
   const data = useRoute<RouteProp<RootStackParamList, 'AccountType'>>();
-  const {updateAuth} = useContext(AuthContext)
+  const { updateAuth,isAuthenticated } = useContext(AuthContext)
   const navigation = useNavigation<ScreenProp>();
   const [alertMessage, setAlertMessage] = useState<string>('')
 
 
-  async function getServiceHandler(userRoleValue: number) {
+  async function getServiceHandler(userRoleValue: string) {
     const dto = {
       fullname: data.params.data.fullName,
       email_address: data.params.data.email,
@@ -39,28 +39,30 @@ export default function AccountType() {
       role: userRoleValue
     } as SignUpReqDto
     try {
-      const response: AxiosResponse<SignUpReqDto, void> = await axios(`${process.env.EXPO_PUBLIC_API_URL}/auth/sign-up`, {
+      const response: AxiosResponse<SignUpResDto> = await axios(`${process.env.EXPO_PUBLIC_API_URL}/auth/sign-up`, {
         method: 'POST',
         data: dto,
         headers: {
           'Content-type': 'application/json'
         }
       });
-      if (userRoleValue === USER_ROLES.USER) {
+      updateAuth(response.data.access_token, response.data.roles[0])
+
+      if (response.data.roles[0] === USER_ROLES.USER) {
         navigation.navigate(ROUTES.USER_PERSONAL_INFO)
       }
 
-      if (userRoleValue === USER_ROLES.DRIVER) {
+      if (response.data.roles[0] === USER_ROLES.DRIVER) {
         navigation.navigate(ROUTES.DRIVER_PERSONAL_INFO)
       }
 
-      if (userRoleValue === USER_ROLES.TRANSPORTER) {
+      if (response.data.roles[0] === USER_ROLES.TRANSPORTER) {
         navigation.navigate(ROUTES.TRANSPORTER_PERSONAL_INFO)
       }
 
       // setAlertMessage('kulanıcı başarılı bir şekilde oluşmuştur lütfen yazdıgnız bilgiler ile giriş yapın');
 
-    } catch (e) {
+    } catch (e: any) {
       console.log('error---->', e.response);
       alert(e.response.data.message)
       return
@@ -69,11 +71,11 @@ export default function AccountType() {
 
 
   return (
-    <SafeAreaView style={{top: 70}}>
+    <SafeAreaView style={{ top: 70 }}>
       <Text style={styles.mainText}>Lütfen Bir Hesap Türü Seçin</Text>
       <View style={styles.buttonWrapper}>
         <CustomButton onPress={() => getServiceHandler(USER_ROLES.USER)}>Kulanıcı</CustomButton>
-        <CustomButton styles={{marginHorizontal: 15}}
+        <CustomButton styles={{ marginHorizontal: 15 }}
                       onPress={() => getServiceHandler(USER_ROLES.TRANSPORTER)}>Taşıyıcı</CustomButton>
         <CustomButton onPress={() => getServiceHandler(USER_ROLES.DRIVER)}>Şoför</CustomButton>
       </View>

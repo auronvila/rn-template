@@ -59,6 +59,17 @@ function UnAuthanticatedRoutes() {
           headerLeft: props => <></>
         }}
         component={SignUpScreen} name={ROUTES.SIGN_UP}/>
+
+    </Stack.Navigator>
+  )
+}
+
+function AuthanticatedRoutes() {
+  return (
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={ROUTES.TAB_NAVIGATOR}
+    >
       <Stack.Screen
         options={{
           headerLeft: props => <></>
@@ -83,15 +94,6 @@ function UnAuthanticatedRoutes() {
         }}
         component={DocumentsInfo}
         name={ROUTES.DOCUMENTS_INFO}/>
-    </Stack.Navigator>
-  )
-}
-
-function AuthanticatedRoutes() {
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-    >
       <Stack.Screen
         options={
           {
