@@ -8,5 +8,20 @@ export const UserService = {
       method: 'GET'
     })
     return response.data
+  },
+
+  async changeOrUpdateRole(newRole: string): Promise<void> {
+    await ApiService.fetchData<void, void>({
+      url: `/user/role/${newRole}`,
+      method: 'POST'
+    })
+  },
+
+  async changePassword(password: string): Promise<void> {
+    await ApiService.fetchData<{ password: string }, void>({
+      url: '/user/change-password',
+      method: 'POST',
+      data: { password }
+    })
   }
 }

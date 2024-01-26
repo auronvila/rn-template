@@ -25,7 +25,7 @@ export type RootStackParamList = {
 
 export default function AccountType() {
   const data = useRoute<RouteProp<RootStackParamList, 'AccountType'>>();
-  const { updateAuth,isAuthenticated } = useContext(AuthContext)
+  const { updateAuth, isAuthenticated } = useContext(AuthContext)
   const navigation = useNavigation<ScreenProp>();
   const [alertMessage, setAlertMessage] = useState<string>('')
 
@@ -36,38 +36,39 @@ export default function AccountType() {
       email_address: data.params.data.email,
       password: data.params.data.password,
       phone_number: data.params.data.phoneNumber,
-      role: userRoleValue
-    } as SignUpReqDto
+      role: userRoleValue,
+    } as SignUpReqDto;
+
     try {
       const response: AxiosResponse<SignUpResDto> = await axios(`${process.env.EXPO_PUBLIC_API_URL}/auth/sign-up`, {
         method: 'POST',
         data: dto,
         headers: {
-          'Content-type': 'application/json'
-        }
+          'Content-type': 'application/json',
+        },
       });
-      updateAuth(response.data.access_token, response.data.roles[0])
 
-      if (response.data.roles[0] === USER_ROLES.USER) {
-        navigation.navigate(ROUTES.USER_PERSONAL_INFO)
+      // updateAuth(response.data.access_token, response.data.roles[0]);
+
+
+      if (userRoleValue === USER_ROLES.USER) {
+        navigation.navigate(ROUTES.USER_PERSONAL_INFO);
       }
 
-      if (response.data.roles[0] === USER_ROLES.DRIVER) {
-        navigation.navigate(ROUTES.DRIVER_PERSONAL_INFO)
+      if (userRoleValue === USER_ROLES.DRIVER) {
+        navigation.navigate(ROUTES.DRIVER_PERSONAL_INFO);
       }
 
-      if (response.data.roles[0] === USER_ROLES.TRANSPORTER) {
-        navigation.navigate(ROUTES.TRANSPORTER_PERSONAL_INFO)
+      if (userRoleValue === USER_ROLES.TRANSPORTER) {
+        navigation.navigate(ROUTES.TRANSPORTER_PERSONAL_INFO);
       }
-
-      // setAlertMessage('kulanıcı başarılı bir şekilde oluşmuştur lütfen yazdıgnız bilgiler ile giriş yapın');
-
     } catch (e: any) {
       console.log('error---->', e.response);
-      alert(e.response.data.message)
-      return
+      alert(e.response.data.message);
+      return;
     }
   }
+
 
 
   return (

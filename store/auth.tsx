@@ -1,38 +1,42 @@
-import {createContext, ReactNode, useEffect, useState} from 'react';
-import {AuthContextModel} from './model/authContextModel';
+import { createContext, ReactNode, useEffect, useState } from 'react';
+import { AuthContextModel } from './model/authContextModel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
-import {ROUTES} from '../constants';
-import {ScreenProp} from '../screens/publicScreens/WelcomeScreen';
 
 export const AuthContext = createContext<AuthContextModel>({} as AuthContextModel);
 
-export function AuthContextProvider({children}: { children: ReactNode }) {
-  const [userInfo, setUserInfo] = useState<{ token: string | null, role: string | null } | null>()
-  const navigation = useNavigation<ScreenProp>();
-  const [isAuthenticated, setIsAuthenticated] = useState(!!userInfo);
+export function AuthContextProvider({ children }: { children: ReactNode }) {
+  const [userInfo, setUserInfo] = useState<{ token: string | null, role: string | null } | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   useEffect(() => {
-    setIsAuthenticated(!!userInfo);
-  }, [userInfo]);
+    async function checkAuthStatus() {
+      const userInfoString = await AsyncStorage.getItem('userInfo');
+      const userInfo = JSON.parse(userInfoString || '{}');
+      setIsAuthenticated(!!userInfo.token);
+      setUserInfo(userInfo);
+    }
+
+    checkAuthStatus();
+  }, []);
 
   async function updateAuth(token: string | null, userRole: string | null) {
-    const userInfo = {token, role: userRole};
-    await AsyncStorage.setItem('userInfo', JSON.stringify(userInfo))
-    setUserInfo(userInfo)
+    const newUserInfo = {token, role: userRole};
+    await AsyncStorage.setItem('userInfo', JSON.stringify(newUserInfo));
+    setUserInfo(newUserInfo);
+    setIsAuthenticated(!!token);
   }
 
 
   async function logOut() {
     await AsyncStorage.removeItem('userInfo');
     setUserInfo(null);
+    setIsAuthenticated(false);
   }
 
-
-
   return (
-    <AuthContext.Provider value={{updateAuth, logOut, userInfo, isAuthenticated: isAuthenticated}}>
+    <AuthContext.Provider value={{ updateAuth, logOut, userInfo, isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );
 }
+

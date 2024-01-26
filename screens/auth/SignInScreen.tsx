@@ -64,7 +64,7 @@ export default function SignInScreen() {
       const {id_token} = response.params;
 
       const credential = firebase.auth.GoogleAuthProvider.credential(id_token);
-      signInWithCredential(auth, credential).then(i => console.log('IIIIIIII', i))
+      signInWithCredential(auth, credential).then()
 
       firebase.auth().signInWithCredential(credential).then((result) => {
       }).catch((error) => {
@@ -105,7 +105,7 @@ export default function SignInScreen() {
             'Content-type': 'application/json'
           }
         });
-        navigation.navigate(ROUTES.HOME)
+        navigation.navigate(ROUTES.TAB_NAVIGATOR)
         updateAuth(response.data.access_token, 'USER')
       } catch (e: any) {
         console.log('error---->', e.response);

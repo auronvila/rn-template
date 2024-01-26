@@ -13,5 +13,6 @@ export default {
   DRIVER_PERSONAL_INFO: 'DriverPersonalInfo',
   TRANSPORTER_PERSONAL_INFO: 'TransporterPersonalInfo',
   PROFILE_SCREEN: 'ProfileScreen',
-  DOCUMENTS_INFO:'DocumentsInfo'
+  DOCUMENTS_INFO: 'DocumentsInfo',
+  CHANGE_PASSWORD: 'ChangePassword'
 }
