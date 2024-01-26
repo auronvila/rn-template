@@ -24,9 +24,8 @@ export default function UserPersonalInfoForm(props: { switchComponent: ReactElem
 
 
   const onSubmit = async (data: any) => {
-    // todo send req to the backend
     console.log(data)
-    navigation.navigate(ROUTES.HOME)
+    navigation.navigate(ROUTES.TAB_NAVIGATOR)
   };
 
   return (

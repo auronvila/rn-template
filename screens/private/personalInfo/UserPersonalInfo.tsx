@@ -5,12 +5,15 @@ import CustomButton from "../../../components/Button";
 import {yupResolver} from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
-import {useState} from "react";
+import { useContext, useState } from 'react';
 import UserPersonalInfoForm from "./UserPersonalInfoForm";
 import UserCorporateInfoForm from "./UserCorporateInfoForm";
+import { AuthContext } from '../../../store/auth';
 
 export default function UserPersonalInfo() {
   const [isCorporate, setIsCorporate] = useState(false);
+  const {isAuthenticated} = useContext(AuthContext)
+  console.log(isAuthenticated)
   const toggleSwitch = () => setIsCorporate(previousState => !previousState);
 
   const validationSchema = yup.object().shape({

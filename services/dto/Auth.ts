@@ -3,5 +3,11 @@ export type SignUpReqDto = {
   email_address: string,
   password: string,
   fullname: string,
-  role: number
+  role: string
+}
+
+export type SignUpResDto = {
+  access_token: string,
+  expires_in: number,
+  roles: string[]
 }
