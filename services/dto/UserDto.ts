@@ -4,3 +4,11 @@ export type UserResDto = {
   fullname: string,
   roles: string[]
 }
+
+export type UserDocumentsResDto = {
+  id: string,
+  description: string,
+  role: string,
+  types: string[],
+  required: boolean,
+}

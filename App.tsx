@@ -104,6 +104,12 @@ function AuthanticatedRoutes() {
         component={HomeTabNavigator}
         name={ROUTES.TAB_NAVIGATOR}/>
       <Stack.Screen
+        options={{
+          headerLeft: props => <></>
+        }}
+        component={DocumentsInfo}
+        name={ROUTES.DOCUMENTS_INFO}/>
+      <Stack.Screen
         component={ChangePassword}
         name={ROUTES.CHANGE_PASSWORD}/>
     </Stack.Navigator>

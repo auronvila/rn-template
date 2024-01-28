@@ -1,5 +1,5 @@
 import { ApiService } from './api.service';
-import { UserResDto } from './dto/UserDto';
+import { UserDocumentsResDto, UserResDto } from './dto/UserDto';
 
 export const UserService = {
   async getUserDetails(): Promise<UserResDto> {
@@ -23,5 +23,13 @@ export const UserService = {
       method: 'POST',
       data: { password }
     })
+  },
+
+  async getDocumentsByUserType(): Promise<UserDocumentsResDto[]> {
+    const response = await ApiService.fetchData<void, UserDocumentsResDto[]>({
+      url: `/document/type/active-user`,
+      method: 'GET'
+    })
+    return response.data
   }
 }

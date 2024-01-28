@@ -22,13 +22,11 @@ export default function ProfileScreen() {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        console.log('girdi')
         const userData = await UserService.getUserDetails();
         setEmailAddress(userData.email_address);
         setRole(userData.roles[0]);
         setPhoneNumber(userData.phone_number);
         setFullName(userData.fullname);
-        console.log('cikti')
 
       } catch (error) {
         console.error(error);
@@ -80,7 +78,7 @@ export default function ProfileScreen() {
           </View>
         )}
       </View>
-      <ProfileSectionWrapper text={'Belgeler'}/>
+      <ProfileSectionWrapper onPress={() => navigation.navigate(ROUTES.DOCUMENTS_INFO)} text={'Belgeler'}/>
       <ProfileSectionWrapper onPress={() => navigation.navigate(ROUTES.CHANGE_PASSWORD)} text={'Parolanı Güncelle'}/>
       <ProfileSectionWrapper text={'Çıkış'} styles={{ backgroundColor: '#f7867e' }} onPress={logOut}/>
     </View>
