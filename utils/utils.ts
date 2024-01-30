@@ -12,3 +12,13 @@ export function LocalizeUserRole(role: string) {
       return ''
   }
 }
+
+export async function uriToBlob(uri: string): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    fetch(uri)
+      .then(response => response.blob())
+      .then(blob => resolve(blob))
+      .catch(error => reject(new Error('Failed to convert URI to Blob')));
+  });
+}
+

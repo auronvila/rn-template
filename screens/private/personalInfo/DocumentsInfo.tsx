@@ -1,10 +1,11 @@
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ScrollView, ActivityIndicator, StyleSheet, Alert } from 'react-native';
 import ImagePicker from '../../../components/ImagePicker';
-import React, { useEffect, useState } from 'react';
 import PdfPicker from '../../../components/PdfPicker';
 import CustomButton from '../../../components/Button';
 import { UserService } from '../../../services/user.service';
 import { UserDocumentsResDto } from '../../../services/dto/UserDto';
+import { AuthContext } from '../../../store/auth';
+import React, { useContext, useEffect, useState } from 'react';
 
 export default function DocumentsInfo() {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
@@ -36,14 +37,45 @@ export default function DocumentsInfo() {
     setSelectedPDFs((prevPDFs) => [...prevPDFs, pdfUri]);
   }
 
-  function handleDocumentsPost() {
-    console.log([...selectedImages, ...selectedPDFs]);
+  async function handleDocumentsPost() {
+    try {
+      setIsLoading(true);
+
+      const formData = new FormData();
+
+      for (let index = 0; index < selectedImages.length; index++) {
+        const imageUri = selectedImages[index];
+        const documentId = documentsData![index].id;
+
+        // @ts-ignore
+        formData.append(documentId, { uri: imageUri, name: `image_test.jpg`, type: 'image/jpeg' });
+      }
+
+      for (let i = 0; i < selectedPDFs.length; i++) {
+        const pdfUri = selectedPDFs[i];
+        const documentId = documentsData![i].id;
+        // @ts-ignore
+        formData.append(documentId, { uri: pdfUri, type: 'application/pdf' });
+      }
+
+      console.log('FormData:', formData);
+
+      await UserService.sendDocuments(formData);
+
+      setSelectedImages([]);
+      setSelectedPDFs([]);
+    } catch (error: any) {
+      Alert.alert('Error uploading documents:', error.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
+
 
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff"/>
+        <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
   }
@@ -55,14 +87,14 @@ export default function DocumentsInfo() {
           if (i.types[0] === 'PDF') {
             return (
               <View style={{ marginBottom: 40 }} key={index}>
-                <PdfPicker label={i.description} onSelectedPdf={pickedPdfHandler}/>
+                <PdfPicker label={i.description} onSelectedPdf={pickedPdfHandler} />
               </View>
             );
           }
           if (i.types[0] === 'IMAGE') {
             return (
               <View style={{ marginBottom: 40 }} key={index}>
-                <ImagePicker label={i.description} onTakenImage={imageTakenHandler}/>
+                <ImagePicker label={i.description} onTakenImage={imageTakenHandler} />
               </View>
             );
           }
@@ -77,6 +109,6 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 });
