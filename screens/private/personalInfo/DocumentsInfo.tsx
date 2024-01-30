@@ -1,4 +1,4 @@
-import { View, ScrollView, ActivityIndicator, StyleSheet, Alert } from 'react-native';
+import { View, ScrollView, ActivityIndicator, StyleSheet, Alert, Text } from 'react-native';
 import ImagePicker from '../../../components/ImagePicker';
 import PdfPicker from '../../../components/PdfPicker';
 import CustomButton from '../../../components/Button';
@@ -6,12 +6,15 @@ import { UserService } from '../../../services/user.service';
 import { UserDocumentsResDto } from '../../../services/dto/UserDto';
 import { AuthContext } from '../../../store/auth';
 import React, { useContext, useEffect, useState } from 'react';
+import AlertDialog from '../../../components/AlertDialog';
+import { ROUTES } from '../../../constants';
 
 export default function DocumentsInfo() {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [selectedPDFs, setSelectedPDFs] = useState<string[]>([]);
   const [documentsData, setDocumentsData] = useState<UserDocumentsResDto[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>('')
 
   useEffect(() => {
     async function getUserDocuments() {
@@ -61,7 +64,7 @@ export default function DocumentsInfo() {
       console.log('FormData:', formData);
 
       await UserService.sendDocuments(formData);
-
+      setAlertMessage('Belgeler başarılı bir şekilde gönderilmiştir')
       setSelectedImages([]);
       setSelectedPDFs([]);
     } catch (error: any) {
@@ -75,9 +78,17 @@ export default function DocumentsInfo() {
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#0000ff"/>
       </View>
     );
+  }
+
+  if (documentsData?.length === 0) {
+    return (
+      <View style={{ marginTop:90, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ fontSize: 15,fontWeight:'bold' }}>Herhangi bir belge yüklemeniz gerekmemektedir</Text>
+      </View>
+    )
   }
 
   return (
@@ -87,20 +98,22 @@ export default function DocumentsInfo() {
           if (i.types[0] === 'PDF') {
             return (
               <View style={{ marginBottom: 40 }} key={index}>
-                <PdfPicker label={i.description} onSelectedPdf={pickedPdfHandler} />
+                <PdfPicker label={i.description} onSelectedPdf={pickedPdfHandler}/>
               </View>
             );
           }
           if (i.types[0] === 'IMAGE') {
             return (
               <View style={{ marginBottom: 40 }} key={index}>
-                <ImagePicker label={i.description} onTakenImage={imageTakenHandler} />
+                <ImagePicker label={i.description} onTakenImage={imageTakenHandler}/>
               </View>
             );
           }
         })}
         <CustomButton onPress={handleDocumentsPost}>Belgeleri Gönder</CustomButton>
       </View>
+      <AlertDialog message={alertMessage} onClose={() => setAlertMessage('')}
+      />
     </ScrollView>
   );
 }
@@ -109,6 +122,6 @@ const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
+    alignItems: 'center'
+  }
 });
