@@ -13,7 +13,6 @@ import { AuthContext } from '../../../store/auth';
 export default function UserPersonalInfo() {
   const [isCorporate, setIsCorporate] = useState(false);
   const {isAuthenticated} = useContext(AuthContext)
-  console.log(isAuthenticated)
   const toggleSwitch = () => setIsCorporate(previousState => !previousState);
 
   const validationSchema = yup.object().shape({

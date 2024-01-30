@@ -20,6 +20,7 @@
       "bundleIdentifier": "com.misscoding.firebaselogin"
     },
     "plugins": [
+
       "expo-apple-authentication",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
@@ -27,6 +28,9 @@
       "expo-document-picker"
     ],
     "android": {
+      "permissions": [
+        "INTERNET"
+      ],
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

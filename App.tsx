@@ -19,6 +19,7 @@ import DriverPersonalInfo from './screens/private/personalInfo/DriverPersonalInf
 import TransporterPersonalInfo from './screens/private/personalInfo/TransporterPersonalInfo';
 import HomeTabNavigator from './navigators/BottomTabNavigator';
 import DocumentsInfo from './screens/private/personalInfo/DocumentsInfo';
+import ChangePassword from './screens/auth/ChangePassword';
 
 const Stack = createNativeStackNavigator()
 
@@ -59,17 +60,6 @@ function UnAuthanticatedRoutes() {
           headerLeft: props => <></>
         }}
         component={SignUpScreen} name={ROUTES.SIGN_UP}/>
-
-    </Stack.Navigator>
-  )
-}
-
-function AuthanticatedRoutes() {
-  return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false }}
-      initialRouteName={ROUTES.TAB_NAVIGATOR}
-    >
       <Stack.Screen
         options={{
           headerLeft: props => <></>
@@ -94,15 +84,34 @@ function AuthanticatedRoutes() {
         }}
         component={DocumentsInfo}
         name={ROUTES.DOCUMENTS_INFO}/>
+    </Stack.Navigator>
+  )
+}
+
+function AuthanticatedRoutes() {
+  return (
+    <Stack.Navigator
+      initialRouteName={ROUTES.TAB_NAVIGATOR}
+    >
       <Stack.Screen
         options={
           {
+            headerShown:false,
             headerLeft: () => <></>,
             gestureEnabled: true
           }
         }
         component={HomeTabNavigator}
         name={ROUTES.TAB_NAVIGATOR}/>
+      <Stack.Screen
+        options={{
+          headerLeft: props => <></>
+        }}
+        component={DocumentsInfo}
+        name={ROUTES.DOCUMENTS_INFO}/>
+      <Stack.Screen
+        component={ChangePassword}
+        name={ROUTES.CHANGE_PASSWORD}/>
     </Stack.Navigator>
   )
 }
