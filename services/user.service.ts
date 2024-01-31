@@ -27,9 +27,23 @@ export const UserService = {
 
   async getDocumentsByUserType(): Promise<UserDocumentsResDto[]> {
     const response = await ApiService.fetchData<void, UserDocumentsResDto[]>({
-      url: `/document/type/active-user`,
+      url: `/document-type/active-user`,
       method: 'GET'
     })
     return response.data
+  },
+
+  async sendDocuments(formData: FormData): Promise<void> {
+    const response = await ApiService.fetchData<{}, void>({
+      url: `/user-document`,
+      method: 'POST',
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+    return response.data;
   }
+
 }

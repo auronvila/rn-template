@@ -36,7 +36,7 @@ export default function ImagePicker(props: ImagePickerProps) {
     const { assets, canceled } = await launchCameraAsync({
       allowsEditing: false,
       aspect: [16, 9],
-      quality: 0.7,
+      quality: 0.1,
       mediaTypes: MediaTypeOptions.Images
 
     });

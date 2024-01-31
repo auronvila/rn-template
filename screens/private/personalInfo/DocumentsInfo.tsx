@@ -1,16 +1,20 @@
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, ScrollView, ActivityIndicator, StyleSheet, Alert, Text } from 'react-native';
 import ImagePicker from '../../../components/ImagePicker';
-import React, { useEffect, useState } from 'react';
 import PdfPicker from '../../../components/PdfPicker';
 import CustomButton from '../../../components/Button';
 import { UserService } from '../../../services/user.service';
 import { UserDocumentsResDto } from '../../../services/dto/UserDto';
+import { AuthContext } from '../../../store/auth';
+import React, { useContext, useEffect, useState } from 'react';
+import AlertDialog from '../../../components/AlertDialog';
+import { ROUTES } from '../../../constants';
 
 export default function DocumentsInfo() {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [selectedPDFs, setSelectedPDFs] = useState<string[]>([]);
   const [documentsData, setDocumentsData] = useState<UserDocumentsResDto[]>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [alertMessage, setAlertMessage] = useState<string>('')
 
   useEffect(() => {
     async function getUserDocuments() {
@@ -36,9 +40,40 @@ export default function DocumentsInfo() {
     setSelectedPDFs((prevPDFs) => [...prevPDFs, pdfUri]);
   }
 
-  function handleDocumentsPost() {
-    console.log([...selectedImages, ...selectedPDFs]);
+  async function handleDocumentsPost() {
+    try {
+      setIsLoading(true);
+
+      const formData = new FormData();
+
+      for (let index = 0; index < selectedImages.length; index++) {
+        const imageUri = selectedImages[index];
+        const documentId = documentsData![index].id;
+
+        // @ts-ignore
+        formData.append(documentId, { uri: imageUri, name: `image_test.jpg`, type: 'image/jpeg' });
+      }
+
+      for (let i = 0; i < selectedPDFs.length; i++) {
+        const pdfUri = selectedPDFs[i];
+        const documentId = documentsData![i].id;
+        // @ts-ignore
+        formData.append(documentId, { uri: pdfUri, type: 'application/pdf' });
+      }
+
+      console.log('FormData:', formData);
+
+      await UserService.sendDocuments(formData);
+      setAlertMessage('Belgeler başarılı bir şekilde gönderilmiştir')
+      setSelectedImages([]);
+      setSelectedPDFs([]);
+    } catch (error: any) {
+      Alert.alert('Error uploading documents:', error.message);
+    } finally {
+      setIsLoading(false);
+    }
   }
+
 
   if (isLoading) {
     return (
@@ -46,6 +81,14 @@ export default function DocumentsInfo() {
         <ActivityIndicator size="large" color="#0000ff"/>
       </View>
     );
+  }
+
+  if (documentsData?.length === 0) {
+    return (
+      <View style={{ marginTop:90, alignItems: 'center', justifyContent: 'center' }}>
+        <Text style={{ fontSize: 15,fontWeight:'bold' }}>Herhangi bir belge yüklemeniz gerekmemektedir</Text>
+      </View>
+    )
   }
 
   return (
@@ -69,6 +112,8 @@ export default function DocumentsInfo() {
         })}
         <CustomButton onPress={handleDocumentsPost}>Belgeleri Gönder</CustomButton>
       </View>
+      <AlertDialog message={alertMessage} onClose={() => setAlertMessage('')}
+      />
     </ScrollView>
   );
 }
